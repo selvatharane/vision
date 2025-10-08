@@ -1,0 +1,21 @@
+streamlit
+torch
+torchvision
+segmentation-models-pytorch
+numpy
+pillow
+opencv-python-headless
+
+
+# Display first few results
+            cols = st.columns(min(len(results),4))
+            for idx, (col, res) in enumerate(zip(cols, results[:4])):
+                col.image(res, caption=f"Result {idx+1}", use_container_width=True)
+
+            # ZIP download
+            zip_buffer = BytesIO()
+            with zipfile.ZipFile(zip_buffer,"w") as zip_file:
+                for idx, res in enumerate(results):
+                    buf = BytesIO()
+                    Image.fromarray(res).save(buf, format="PNG")
+                    zip_file.writestr(f"segmented_{idx+1}.png", buf.getvalue())
